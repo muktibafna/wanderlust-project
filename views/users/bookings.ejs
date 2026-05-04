@@ -1,0 +1,60 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="container mt-5 mb-5 pb-5">
+    <div class="mb-5">
+        <h1 class="fw-bold mb-1">My Trips</h1>
+        <p class="text-muted">Explore your past and upcoming adventures.</p>
+    </div>
+    
+    <% if (bookings && bookings.length > 0) { %>
+        <div class="row g-4">
+            <% for(let booking of bookings){ %>
+                <div class="col-12 col-xl-6 stagger-card">
+                    <div class="card h-100 border rounded-4 overflow-hidden shadow-sm hover-lift d-flex flex-md-row p-0">
+                        <div class="col-md-4 p-0 card-img-container">
+                            <img src="<%= booking.listing.image.url %>" class="w-100 h-100 object-fit-cover transition-scale" alt="listing_image" style="min-height: 200px;">
+                        </div>
+                        <div class="col-md-8 p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold mb-0 text-dark text-truncate" style="max-width: 80%;"><%= booking.listing.title %></h5>
+                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 small fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;"><%= booking.paymentStatus %></span>
+                            </div>
+                            <p class="text-muted small mb-3"><i class="fa-solid fa-location-dot me-2"></i><%= booking.listing.location %>, <%= booking.listing.country %></p>
+                            
+                            <div class="bg-light rounded-3 p-3 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa-regular fa-calendar-days text-muted me-3"></i>
+                                    <div>
+                                        <div class="fw-bold small" style="font-size: 0.85rem;"><%= booking.checkIn.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'}) %> - <%= booking.checkOut.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'}) %></div>
+                                        <small class="text-muted"><%= Math.ceil((booking.checkOut - booking.checkIn) / (1000 * 60 * 60 * 24)) %> nights · <%= booking.guests || 1 %> guests</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
+                                <span class="fw-bold text-dark fs-5">₹<%= booking.totalPrice.toLocaleString("en-IN") %></span>
+                                <div class="d-flex gap-2">
+                                    <a href="/listings/<%= booking.listing._id %>" class="btn btn-outline-dark rounded-pill px-4 py-2 btn-sm fw-bold d-flex align-items-center justify-content-center" style="height: 38px;">View</a>
+                                    <form method="POST" action="/bookings/<%= booking._id %>?_method=DELETE">
+                                        <button class="btn btn-danger rounded-pill px-4 py-2 btn-sm fw-bold shadow-sm d-flex align-items-center justify-content-center" style="background-color: #ff385c; border: none; height: 38px;">Cancel Trip</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    <% } else { %>
+        <div class="text-center bg-secondary border rounded-4 p-5 mt-5 shadow-sm mx-auto" style="max-width: 600px; border-style: dashed !important;">
+            <div class="empty-state-icon mb-4">
+                <i class="fa-solid fa-suitcase-rolling display-1 text-danger opacity-25"></i>
+            </div>
+            <h3 class="fw-bold text-dark">No trips booked... yet!</h3>
+            <p class="text-muted px-md-5 mb-4">Time to dust off your bags and start planning your next adventure. Your world is waiting to be explored.</p>
+            <a href="/listings" class="btn btn-danger rounded-pill px-5 py-3 fw-bold shadow hover-shadow transition-all" style="background-color: #ff385c; border: none;">
+                Explore Destinations
+            </a>
+        </div>
+    <% } %>
+</div>

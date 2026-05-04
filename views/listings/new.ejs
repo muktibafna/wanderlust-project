@@ -1,0 +1,98 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="auth-container mt-5 mb-5 pb-5">
+    <div class="auth-card" style="max-width: 700px;">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-2 text-dark">Add New Listing</h2>
+            <p class="text-muted">Fill in the details below to start your hosting journey.</p>
+        </div>
+
+        <form method="POST" action="/Listings" novalidate class="needs-validation" enctype="multipart/form-data">
+            
+            
+            <div class="mb-4">
+                <label for="title" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Property Title</label>
+                <input name="listing[title]" id="title" placeholder="e.g. Modern Beachfront Villa" type="text" class="form-control auth-input shadow-none" required>
+                <div class="invalid-feedback">Please provide a catchy title.</div>
+            </div>
+
+           
+            <div class="mb-4">
+                <label for="description" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Description</label>
+                <textarea name="listing[description]" id="description" placeholder="Share what makes your place special..." class="form-control auth-input shadow-none" rows="4" required></textarea>
+                <div class="invalid-feedback">Tell your guests more about the property.</div>
+            </div>
+
+            
+            <div class="mb-4">
+                <label for="image" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Upload Cover Image</label>
+                <input name="listing[image]" id="image" type="file" class="form-control auth-input shadow-none" required>
+                <div class="invalid-feedback">Please upload a property photo.</div>
+            </div>
+
+           
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 text-start">
+                    <label for="price" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Price per Night (₹)</label>
+                    <input name="listing[price]" id="price" placeholder="1200" type="number" class="form-control auth-input shadow-none" required>
+                    <div class="invalid-feedback">Please set a price.</div>
+                </div>
+                <div class="col-md-6 text-start">
+                    <label for="category" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Vibe/Category</label>
+                    <select name="listing[category]" id="category" class="form-select auth-input shadow-none" required style="padding: 0.75rem 1rem;">
+                        <option value="" disabled selected>Select category</option>
+                        <option value="Trending">Trending</option>
+                        <option value="Rooms">Rooms</option>
+                        <option value="Iconic cities">Iconic cities</option>
+                        <option value="Mountains">Mountains</option>
+                        <option value="Castles">Castles</option>
+                        <option value="Amazing pools">Amazing pools</option>
+                        <option value="Camping">Camping</option>
+                        <option value="Farms">Farms</option>
+                        <option value="Arctic">Arctic</option>
+                        <option value="Domes">Domes</option>
+                        <option value="Boats">Boats</option>
+                        <option value="Luxe">Luxe</option>
+                        <option value="Design">Design</option>
+                        <option value="Amazing views">Amazing views</option>
+                        <option value="Lakefront">Lakefront</option>
+                        <option value="National parks">National parks</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 text-start">
+                    <label for="location" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Location</label>
+                    <input name="listing[location]" id="location" placeholder="Jaipur, Rajasthan" type="text" class="form-control auth-input shadow-none" required>
+                    <div class="invalid-feedback">Please provide a location.</div>
+                </div>
+                <div class="col-md-6 text-start">
+                    <label for="country" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Country</label>
+                    <input name="listing[country]" id="country" placeholder="India" type="text" class="form-control auth-input shadow-none" required>
+                    <div class="invalid-feedback">Please provide a country.</div>
+                </div>
+            </div>
+
+            
+            <div class="mb-4">
+                <label class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Amenities</label>
+                <div class="row g-2">
+                    <% ["Wifi", "Parking", "Kitchen", "AC", "Pool", "TV", "Washer", "Gym"].forEach(amenity => { %>
+                        <div class="col-6 col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="listing[amenities][]" value="<%= amenity %>" id="amenity-<%= amenity %>">
+                                <label class="form-check-label small" for="amenity-<%= amenity %>">
+                                    <%= amenity %>
+                                </label>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-wanderlust w-100 py-3 mt-4 fw-bold fs-5 shadow-sm">Submit Property</button>
+
+        </form>
+    </div>
+</div>

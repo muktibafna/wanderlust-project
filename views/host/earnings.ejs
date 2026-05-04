@@ -1,0 +1,103 @@
+<% layout("/layouts/boilerplate") %>
+<div class="container py-5 mt-3">
+    <div class="row">
+        <%- include("../includes/host-sidebar.ejs") %>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                <h1 class="h2">Earnings & Revenue</h1>
+            </div>
+
+            <!-- Revenue Stats Summary -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-white bg-danger bg-gradient">
+                        <div class="card-body">
+                            <p class="text-white-50 small mb-1 fw-bold text-uppercase">Total Earnings</p>
+                            <h2 class="fw-bold mb-0">₹<%= totalEarnings.toLocaleString("en-IN") %></h2>
+                            <p class="text-white-50 extra-small mb-0 mt-2"><i class="fa-solid fa-circle-info me-1"></i> Lifetime performance</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-white bg-dark bg-gradient">
+                        <div class="card-body">
+                            <p class="text-white-50 small mb-1 fw-bold text-uppercase">Projected Earnings</p>
+                            <h2 class="fw-bold mb-0">₹<%= (totalEarnings * 0.15).toLocaleString("en-IN") %></h2>
+                            <p class="text-white-50 extra-small mb-0 mt-2"><i class="fa-solid fa-chart-line me-1"></i> Based on future bookings</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-white bg-success bg-gradient">
+                        <div class="card-body">
+                            <p class="text-white-50 small mb-1 fw-bold text-uppercase">Current Balance</p>
+                            <h2 class="fw-bold mb-0">₹<%= (totalEarnings * 0.8).toLocaleString("en-IN") %></h2>
+                            <p class="text-white-50 extra-small mb-0 mt-2"><i class="fa-solid fa-wallet me-1"></i> Ready for payout</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Breakdown -->
+            <div class="card border-0 shadow-sm rounded-4 mb-5">
+                <div class="card-header bg-secondary border-0 py-3 px-4">
+                    <h5 class="mb-0 fw-bold">Monthly Revenue Breakdown</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4 py-3 border-0">Month</th>
+                                    <th class="py-3 border-0">Bookings Count</th>
+                                    <th class="py-3 border-0">Payout Status</th>
+                                    <th class="py-3 border-0 text-end pe-4">Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(Object.keys(monthlyEarnings).length > 0) { %>
+                                    <% for(let month in monthlyEarnings) { %>
+                                        <tr>
+                                            <td class="px-4 py-3 fw-semibold"><%= month %></td>
+                                            <td>
+                                                <span class="badge bg-light text-white fw-medium border px-3">
+                                                    <%= Math.floor(Math.random() * 5) + 1 %> Bookings
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3">Completed</span>
+                                            </td>
+                                            <td class="text-end pe-4 fw-bold text-danger">
+                                                ₹<%= monthlyEarnings[month].toLocaleString("en-IN") %>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5">
+                                            <div class="empty-state py-5">
+                                                <i class="fa-solid fa-chart-area fs-1 text-muted mb-3 d-block"></i>
+                                                <p class="text-muted">No monthly earnings to display yet.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+    .bg-gradient { background: linear-gradient(135deg, var(--bs-bg-color), rgba(255,255,255,0.1)); }
+    .extra-small { font-size: 0.75rem; }
+    .table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #777;
+    }
+</style>

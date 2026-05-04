@@ -1,0 +1,189 @@
+<% layout("/layouts/boilerplate")%>
+
+    <body>
+        <div class="filters-main d-flex flex-column flex-lg-row align-items-center mt-3 mb-4 gap-4">
+            <div class="filters-container">
+                <button class="scroll-btn left" id="scrollLeft"><i class="fa-solid fa-chevron-left"></i></button>
+                <div id="filters" class="d-flex align-items-center flex-grow-1 w-100 overflow-auto"
+                    style="margin-top: 0; padding-bottom: 0;">
+                    <a href="/listings?category=Trending" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-fire"></i></div>
+                        <p>Trending</p>
+                    </a>
+                    <a href="/listings?category=Rooms" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-bed"></i></div>
+                        <p>Rooms</p>
+                    </a>
+                    <a href="/listings?category=Iconic cities" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-mountain-city"></i></div>
+                        <p>Iconic cities</p>
+                    </a>
+                    <a href="/listings?category=Mountains" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-mountain"></i></div>
+                        <p>Mountains</p>
+                    </a>
+                    <a href="/listings?category=Castles" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-brands fa-fort-awesome"></i></div>
+                        <p>Castles</p>
+                    </a>
+                    <a href="/listings?category=Amazing pools" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-person-swimming"></i></div>
+                        <p>Amazing pools</p>
+                    </a>
+                    <a href="/listings?category=Camping" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-campground"></i></div>
+                        <p>Camping</p>
+                    </a>
+                    <a href="/listings?category=Farms" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-cow"></i></div>
+                        <p>Farms</p>
+                    </a>
+                    <a href="/listings?category=Arctic" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-regular fa-snowflake"></i></div>
+                        <p>Arctic</p>
+                    </a>
+                    <a href="/listings?category=Domes" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-igloo"></i></div>
+                        <p>Domes</p>
+                    </a>
+                    <a href="/listings?category=Boats" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-sailboat"></i></div>
+                        <p>Boats</p>
+                    </a>
+                    <a href="/listings?category=Luxe" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-gem"></i></div>
+                        <p>Luxe</p>
+                    </a>
+                    <a href="/listings?category=Design" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-palette"></i></div>
+                        <p>Design</p>
+                    </a>
+                    <a href="/listings?category=Amazing views" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-mountain-sun"></i></div>
+                        <p>Amazing views</p>
+                    </a>
+                    <a href="/listings?category=Lakefront" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-water"></i></div>
+                        <p>Lakefront</p>
+                    </a>
+                    <a href="/listings?category=National parks" class="filter text-decoration-none text-dark">
+                        <div><i class="fa-solid fa-tree"></i></div>
+                        <p>National parks</p>
+                    </a>
+                </div>
+                <button class="scroll-btn right" id="scrollRight"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+
+            <!-- Display total tax toggle -->
+            <div class="tax-toggle mt-3 mt-lg-0 ms-lg-auto flex-shrink-0">
+                <div class="form-check-reverse form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Display total before taxes</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+            <% for(let listing of allListings){ %>
+                <% const isWishlist=currUser && currUser.wishlist && currUser.wishlist.some(w=> w.toString() ===
+                    listing._id.toString()); %>
+                    <div class="card col listing-card position-relative">
+
+                        <a href="/Listings/<%= listing._id %>"
+                            class="listing-link text-decoration-none text-dark d-block">
+                            <div class="card-img-container">
+                                <img src="<%= listing.image.url %>" class="card-img-top index-img" alt="listing_image">
+                            </div>
+                        </a>
+
+
+                        <form action="/wishlist/<%= listing._id %>" method="POST" class="position-absolute m-0"
+                            style="top: 1rem; right: 1.2rem; z-index: 10;">
+                            <button type="submit" class="btn btn-link p-0 border-0 shadow-none">
+                                <i class="<%= isWishlist ? 'fa-solid text-danger' : 'fa-regular favorite-icon text-white' %> fa-heart fa-lg drop-shadow-sm <%= !isWishlist ? 'favorite-icon' : '' %>"
+                                    {style="font-size: 1.5rem; }<%- isWishlist ? '' : '-webkit-text-stroke: 2px white; opacity: 0.8;' %>"></i>
+                            </button>
+                        </form>
+
+
+                        <a href="/Listings/<%= listing._id %>"
+                            class="listing-link text-decoration-none text-dark d-block">
+                            <div class="card-body">
+                                <p class="card-text mb-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <span class="listing-title"><b>
+                                            <%= listing.title %>
+                                        </b></span>
+                                </div>
+                                <span class="listing-subtitle">Hosted by Professional</span>
+                                <div class="listing-rating mt-1">
+                                    <% if(listing.reviews && listing.reviews.length> 0) { %>
+                                        <% let totalRating=0; listing.reviews.forEach(r=> totalRating += r.rating);
+                                            let avgRating = (totalRating / listing.reviews.length).toFixed(1);
+                                            %>
+                                            <span style="font-size: 0.9rem;"><i class="fa-solid fa-star fa-sm me-1"
+                                                    style="color: #FFD700;"></i><b>
+                                                    <%= avgRating %>
+                                                </b></span>
+                                            <% } else { %>
+                                                <span class="text-muted" style="font-size: 0.8rem;">New</span>
+                                                <% } %>
+                                </div>
+                                <span class="listing-price mt-2 d-block"><b class="price-value"
+                                        data-base-price="<%= listing.price %>">&#8377;<%=
+                                            listing.price.toLocaleString("en-IN") %></b>
+                                    <span class="tax-info" style="display: none;"> &nbsp;includes 18% GST</span>
+                                </span> <span class="night-text">night</span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                    <% } %>
+        </div>
+
+        <script>
+
+            let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+            if (taxSwitch) {
+                taxSwitch.addEventListener("click", () => {
+                    let taxInfo = document.getElementsByClassName("tax-info");
+                    let priceValues = document.getElementsByClassName("price-value");
+
+                    for (let i = 0; i < priceValues.length; i++) {
+                        let basePrice = parseFloat(priceValues[i].getAttribute("data-base-price"));
+                        let taxedPrice = basePrice + (basePrice * 0.18);
+
+                        if (taxSwitch.checked) {
+                            priceValues[i].innerHTML = `&#8377;${taxedPrice.toLocaleString("en-IN")}`;
+                            if (taxInfo[i]) taxInfo[i].style.display = "inline";
+                        } else {
+                            priceValues[i].innerHTML = `&#8377;${basePrice.toLocaleString("en-IN")}`;
+                            if (taxInfo[i]) taxInfo[i].style.display = "none";
+                        }
+                    }
+                });
+            }
+
+            const filtersList = document.getElementById('filters');
+            const scrollL = document.getElementById('scrollLeft');
+            const scrollR = document.getElementById('scrollRight');
+
+            if (filtersList && scrollL && scrollR) {
+                scrollL.addEventListener('click', () => {
+                    filtersList.scrollBy({ left: -300, behavior: 'smooth' });
+                });
+                scrollR.addEventListener('click', () => {
+                    filtersList.scrollBy({ left: 300, behavior: 'smooth' });
+                });
+
+                const toggleArrows = () => {
+                    scrollL.style.display = filtersList.scrollLeft > 0 ? 'flex' : 'none';
+                    scrollR.style.display = (filtersList.scrollLeft + filtersList.clientWidth < filtersList.scrollWidth - 1) ? 'flex' : 'none';
+                };
+
+                filtersList.addEventListener('scroll', toggleArrows);
+                window.addEventListener('resize', toggleArrows);
+                toggleArrows();
+            }
+        </script>
+    </body>

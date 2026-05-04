@@ -1,0 +1,643 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3 position-relative">
+  <div class="col-lg-8 col-12">
+
+    <h3>Listing Details</h3>
+
+    <div class="card show-card listing-card">
+
+      <img
+        src="<%= listing.image.url %>"
+        class="card-img-top show-img"
+      />
+
+      <div class="card-body mt-3">
+
+        <div class="d-flex justify-content-between align-items-start mb-3 pb-2 border-bottom">
+            <h4 class="mb-0 fw-bold"><%= listing.title %></h4>
+            
+            <% const isWishlist = currUser && currUser.wishlist && currUser.wishlist.some(w => w.toString() === listing._id.toString()); %>
+            <form action="/wishlist/<%= listing._id %>" method="POST" class="m-0 ms-3">
+                <button type="submit" class="btn btn-light rounded-pill border shadow-sm d-flex align-items-center gap-2 px-3 py-2 text-dark hover-shadow" style="transition: all 0.2s;">
+                    <i class="<%= isWishlist ? 'fa-solid text-danger' : 'fa-regular' %> fa-heart fa-lg"></i>
+                    <span class="fw-semibold" style="font-size: 0.9rem;"><%= isWishlist ? 'Saved' : 'Save' %></span>
+                </button>
+            </form>
+        </div>
+
+        <p>
+          <i><%= listing.owner.username %></i>
+        </p>
+
+        <p class="card-text mb-2">
+          <b><%= listing.location %>, <%= listing.country %></b>
+        </p>
+
+        <p class="card-text mb-4">
+          <%= listing.description %>
+        </p>
+
+      </div>
+
+
+      <% if(currUser && listing.owner._id.equals(currUser._id)){ %>
+
+        <div class="btns mt-3">
+
+          <a
+            href="/listings/<%= listing._id %>/edit"
+            class="btn btn-dark action-btn"
+          >
+            Edit
+          </a>
+
+          <form
+            action="/listings/<%= listing._id %>?_method=DELETE"
+            method="POST"
+            class="delete-form"
+          >
+            <button class="btn btn-danger action-btn">
+              Delete
+            </button>
+          </form>
+
+        </div>
+
+      <% } %>
+
+    </div>
+
+    <div class="col-12 mt-3 mb-3">
+      <h4>Where you'll be</h4>
+      <div id="map" data-coordinates="<%= JSON.stringify(listing.geometry && listing.geometry.coordinates ? listing.geometry.coordinates : [77.2090, 28.6139]) %>" data-title="<%= listing.title %>" class="map-container"></div>
+    </div>
+
+    <script src="/js/map.js"></script>
+
+    <hr>
+
+
+    <% if(currUser && !currUser._id.equals(listing.owner._id)){ %>
+
+      <h4>Leave a Review</h4>
+
+      <form
+        action="/listings/<%= listing._id %>/reviews"
+        method="POST"
+      >
+
+        
+        <fieldset class="starability-slot">
+
+          <input type="radio"
+            id="rate5"
+            name="review[rating]"
+            value="5"
+            required />
+          <label for="rate5">5 stars</label>
+
+          <input type="radio"
+            id="rate4"
+            name="review[rating]"
+            value="4" />
+          <label for="rate4">4 stars</label>
+
+          <input type="radio"
+            id="rate3"
+            name="review[rating]"
+            value="3" />
+          <label for="rate3">3 stars</label>
+
+          <input type="radio"
+            id="rate2"
+            name="review[rating]"
+            value="2" />
+          <label for="rate2">2 stars</label>
+
+          <input type="radio"
+            id="rate1"
+            name="review[rating]"
+            value="1" />
+          <label for="rate1">1 star</label>
+
+        </fieldset>
+
+
+        <label class="mt-2">Comment</label>
+
+        <textarea
+          name="review[comment]"
+          class="form-control"
+          required
+        ></textarea>
+
+
+        <button
+          type="submit"
+          class="btn btn-dark mt-2"
+        >
+          Submit
+        </button>
+
+      </form>
+
+    <% } else if(currUser && currUser._id.equals(listing.owner._id)) { %>
+      <div class="alert alert-info py-2"><i class="fa-solid fa-circle-info me-2"></i>You cannot review your own listing.</div>
+    <% } else { %>
+
+      <p>You must login to add review</p>
+
+    <% } %>
+
+
+    <% if(listing.amenities && listing.amenities.length > 0) { %>
+      <hr>
+      <div class="col-12 mt-3 mb-4">
+        <h4>What this place offers</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mt-2">
+          <% 
+            const amenityIcons = {
+                "Wifi": "fa-wifi",
+                "TV": "fa-tv",
+                "Kitchen": "fa-utensils",
+                "Free Parking": "fa-square-parking",
+                "Air Conditioning": "fa-snowflake",
+                "Pool": "fa-person-swimming",
+                "Hot Tub": "fa-hot-tub-person",
+                "Gym": "fa-dumbbell",
+                "Breakfast": "fa-mug-saucer",
+                "Pets Allowed": "fa-paw",
+                "Smoke Alarm": "fa-bell",
+                "First Aid Kit": "fa-kit-medical"
+            };
+          %>
+          <% listing.amenities.forEach(amenity => { %>
+            <div class="col d-flex align-items-center gap-3 py-1">
+              <i class="fa-solid <%= amenityIcons[amenity] || 'fa-check' %> fs-5 text-muted" style="width: 24px;"></i>
+              <span class="fs-6"><%= amenity %></span>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if(listing.reviews && listing.reviews.length > 0) { %>
+      <hr class="mt-5 mb-4">
+      <div class="d-flex align-items-center mb-4">
+          <h4 class="mb-0 fw-bold"><i class="fa-solid fa-star fa-sm me-2"></i> 
+             <% 
+                let totalRating = 0;
+                listing.reviews.forEach(r => totalRating += r.rating);
+                let avgRating = (totalRating / listing.reviews.length).toFixed(1);
+             %>
+             <%= avgRating %> • <%= listing.reviews.length %> reviews
+          </h4>
+      </div>
+
+      <div class="row">
+        <% listing.reviews.forEach((review)=>{ %>
+          <div class="col-12 col-md-6 mb-4">
+            <div class="card h-100 review-card border-0">
+              <div class="card-body p-0">
+                
+                <div class="d-flex align-items-center mb-2">
+                  <div class="reviewer-avatar me-3 bg-dark text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 45px; height: 45px; font-size: 1.1rem; font-weight: 500;">
+                    <%= review.author ? review.author.username.charAt(0).toUpperCase() : 'A' %>
+                  </div>
+                  <div>
+                    <h6 class="card-title mb-0 fw-bold" style="font-size: 1rem;"><%= review.author ? review.author.username : 'Anonymous' %></h6>
+                    <small class="text-muted" style="font-size: 0.85rem;">Registered User</small>
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-2">
+                  <p class="starability-result m-0" data-rating="<%= review.rating %>" style="transform: scale(0.6); transform-origin: left;">
+                    Rated: <%= review.rating %> stars
+                  </p>
+                </div>
+                
+                <p class="card-text text-dark" style="font-size: 0.95rem; line-height: 1.5;">
+                  <%= review.comment %>
+                </p>
+
+                <% if(currUser && review.author && review.author._id.equals(currUser._id)){ %>
+                  <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mt-2 text-end">
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3" style="font-size: 0.8rem;">
+                      Delete
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+
+
+  </div>
+  
+  <div class="col-lg-4 col-12 mt-4 mt-lg-0">
+   
+    <div class="card border rounded-4 shadow-sm sticky-top" style="top: 100px; padding: 1.5rem; z-index: 10;">
+        <h4 class="fw-bold mb-3">₹ <%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">night</span></h4>
+        
+        <form action="/listings/<%= listing._id %>/bookings" method="POST">
+            <div class="border rounded-4 mb-3">
+                <div class="d-flex border-bottom">
+                    <div class="p-2 w-50 border-end">
+                        <label class="form-label mb-0" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Check-in</label>
+                        <input type="date" class="form-control border-0 p-0 shadow-none booking-date" id="checkin" name="checkIn" required min="<%= new Date().toISOString().split('T')[0] %>">
+                    </div>
+                    <div class="p-2 w-50">
+                        <label class="form-label mb-0" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Checkout</label>
+                        <input type="date" class="form-control border-0 p-0 shadow-none booking-date" id="checkout" name="checkOut" required min="<%= new Date().toISOString().split('T')[0] %>">
+                    </div>
+                </div>
+                <div class="p-2">
+                    <label class="form-label mb-0" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Guests</label>
+                    <input type="number" class="form-control border-0 p-0 shadow-none" id="guests" name="guests" value="1" min="1" max="20" required>
+                </div>
+            </div>
+
+            <div id="room-selection-container" class="mt-4 d-none">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-2">Choose Room Combination</label>
+                <div id="room-options" class="d-flex flex-column gap-2">
+                    <!-- combinations will be injected here -->
+                </div>
+            </div>
+            <div id="price-summary" class="mt-4 d-none">
+                <div class="d-flex justify-content-between mb-2">
+                    <span id="price-computation">₹<%= listing.price.toLocaleString("en-IN") %> x 1 night</span>
+                    <span id="base-price">₹<%= listing.price.toLocaleString("en-IN") %></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 text-success" id="discount-row" style="display: none !important;">
+                    <span>Weekly discount (10%)</span>
+                    <span id="discount-amount">-₹0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 text-decoration-underline text-muted">
+                    <span>GST (18%)</span>
+                    <span id="gst-amount">₹0</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span id="total-price">₹0</span>
+                </div>
+            </div>
+            
+            <% if(currUser && !currUser._id.equals(listing.owner._id)) { %>
+                <div class="d-flex gap-2">
+                    <button type="button" id="pay-later-btn" class="btn btn-outline-dark w-50 py-3 rounded-4 fw-bold fs-6 mt-3">Pay Later</button>
+                    <button type="button" id="reserve-btn" class="btn btn-danger w-50 py-3 rounded-4 fw-bold fs-6 text-white mt-3" style="background-color: #fe424d; border: none; box-shadow: 0 4px 15px rgba(254, 66, 77, 0.4);">Pay Now</button>
+                </div>
+            <% } else if (currUser && currUser._id.equals(listing.owner._id)) { %>
+                <div class="alert alert-warning py-3 text-center rounded-4 fw-bold mt-3 mb-0" style="background-color: #fff9e6; border: 1px solid #ffd600; color: #b28b00;">
+                    <i class="fa-solid fa-ban me-2"></i> You cannot book your own listing
+                </div>
+            <% } else { %>
+                <a href="/login" class="btn btn-dark w-100 py-3 rounded-4 fw-bold fs-5 mt-3">Log in to book</a>
+            <% } %>
+        </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    const pricePerNight = Number("<%= listing.price %>"); 
+    const checkinInput = document.getElementById('checkin');
+    const checkoutInput = document.getElementById('checkout');
+    const priceSummary = document.getElementById('price-summary');
+    const reserveBtn = document.getElementById('reserve-btn');
+    const payLaterBtn = document.getElementById('pay-later-btn');
+    const guestsInput = document.getElementById('guests');
+    const roomSelectionContainer = document.getElementById('room-selection-container');
+    const roomOptionsDiv = document.getElementById('room-options');
+    let selectedCombination = null;
+    
+    // UI elements
+    const computationEl = document.getElementById('price-computation');
+    const basePriceEl = document.getElementById('base-price');
+    const discountRow = document.getElementById('discount-row');
+    const discountAmountEl = document.getElementById('discount-amount');
+    const gstAmountEl = document.getElementById('gst-amount');
+    const totalPriceEl = document.getElementById('total-price');
+
+    function findCombinations(target) {
+        const results = [];
+        const sizes = [4, 3, 2];
+        
+        function solveBounded(remaining, startIdx, currentCombo) {
+             if (currentCombo.length > 4) return;
+             if (remaining <= 0) {
+                results.push([...currentCombo]);
+                return;
+            }
+            for (let i = startIdx; i < sizes.length; i++) {
+                currentCombo.push(sizes[i]);
+                solveBounded(remaining - sizes[i], i, currentCombo);
+                currentCombo.pop();
+            }
+        }
+
+        solveBounded(target, 0, []);
+        
+        const uniqueCombos = [];
+        const seen = new Set();
+        
+        results.sort((a,b) => a.length - b.length).forEach(combo => {
+            const counts = {2:0, 3:0, 4:0};
+            combo.forEach(c => counts[c]++);
+            const key = `4:${counts[4]}|3:${counts[3]}|2:${counts[2]}`;
+            if(!seen.has(key)) {
+                seen.add(key);
+                uniqueCombos.push(counts);
+            }
+        });
+        
+        return uniqueCombos.slice(0, 4);
+    }
+
+    function renderRoomOptions() {
+        const guestCount = parseInt(guestsInput.value);
+        if (guestCount < 1) {
+            roomSelectionContainer.classList.add('d-none');
+            return;
+        }
+
+        const combos = findCombinations(guestCount);
+        roomOptionsDiv.innerHTML = '';
+        roomSelectionContainer.classList.remove('d-none');
+
+        combos.forEach((combo, idx) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = `room-option-card p-2 border rounded-3 cursor-pointer transition-all ${idx === 0 ? 'selected mb-2' : 'mb-2'}`;
+            optionDiv.style.cursor = 'pointer';
+            
+            let descriptiveText = [];
+            let totalMultiplier = 0;
+            let roomCount = 0;
+
+            if (combo[4] > 0) { 
+                descriptiveText.push(`${combo[4]} x 4-bed`); 
+                totalMultiplier += combo[4] * 1.8;
+                roomCount += combo[4];
+            }
+            if (combo[3] > 0) { 
+                descriptiveText.push(`${combo[3]} x 3-bed`); 
+                totalMultiplier += combo[3] * 1.4;
+                roomCount += combo[3];
+            }
+            if (combo[2] > 0) { 
+                descriptiveText.push(`${combo[2]} x 2-bed`); 
+                totalMultiplier += combo[2] * 1.0;
+                roomCount += combo[2];
+            }
+
+            const optionPrice = Math.round(pricePerNight * totalMultiplier);
+            const totalCapacity = (combo[4]*4) + (combo[3]*3) + (combo[2]*2);
+
+            optionDiv.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-bold small">${descriptiveText.join(' + ')}</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Capacity: ${totalCapacity} guests</div>
+                    </div>
+                    <div class="text-end">
+                         <div class="fw-bold">₹${optionPrice.toLocaleString('en-IN')}</div>
+                    </div>
+                </div>
+            `;
+
+            optionDiv.onclick = () => {
+                document.querySelectorAll('.room-option-card').forEach(c => c.classList.remove('border-danger', 'bg-light'));
+                optionDiv.classList.add('border-danger', 'bg-light');
+                selectedCombination = { combo, optionPrice, totalMultiplier };
+                calculatePrice();
+            };
+
+            if (idx === 0) {
+                selectedCombination = { combo, optionPrice, totalMultiplier };
+                optionDiv.classList.add('border-danger', 'bg-light');
+            }
+
+            roomOptionsDiv.appendChild(optionDiv);
+        });
+        calculatePrice();
+    }
+
+    function calculatePrice() {
+        if (!checkinInput.value || !checkoutInput.value || !selectedCombination) return;
+        
+        const inDate = new Date(checkinInput.value);
+        const outDate = new Date(checkoutInput.value);
+        const nights = Math.ceil((outDate - inDate) / (1000 * 60 * 60 * 24));
+        
+        if (nights > 0) {
+            priceSummary.classList.remove('d-none');
+            
+            const currentBasePrice = selectedCombination.optionPrice;
+            const totalBase = nights * currentBasePrice;
+            
+            computationEl.innerText = `₹${currentBasePrice.toLocaleString("en-IN")} x ${nights} nights`;
+            basePriceEl.innerText = `₹${totalBase.toLocaleString("en-IN")}`;
+            
+            let discount = nights >= 7 ? totalBase * 0.10 : 0;
+            if (discount > 0) {
+                discountRow.style.setProperty('display', 'flex', 'important');
+                discountAmountEl.innerText = `-₹${discount.toLocaleString("en-IN", {maximumFractionDigits: 0})}`;
+            } else {
+                discountRow.style.setProperty('display', 'none', 'important');
+            } 
+            
+            const afterDiscount = totalBase - discount;
+            const gst = afterDiscount * 0.18;
+            gstAmountEl.innerText = `₹${gst.toLocaleString("en-IN", {maximumFractionDigits: 0})}`;
+            
+            const total = Math.round(afterDiscount + gst);
+            totalPriceEl.innerText = `₹${total.toLocaleString("en-IN")}`;
+            
+        } else {
+            priceSummary.classList.add('d-none');
+        }
+    }
+    
+    guestsInput.addEventListener('input', renderRoomOptions);
+    checkinInput.addEventListener('change', () => {
+        const minCheckout = new Date(checkinInput.value);
+        minCheckout.setDate(minCheckout.getDate() + 1);
+        checkoutInput.min = minCheckout.toISOString().split('T')[0];
+        calculatePrice();
+    });
+    checkoutInput.addEventListener('change', calculatePrice);
+
+    async function submitBooking(paymentMethod, extraData = {}) {
+        const inDate = new Date(checkinInput.value);
+        const outDate = new Date(checkoutInput.value);
+        const nights = Math.ceil((outDate - inDate) / (1000 * 60 * 60 * 24));
+        const currentBasePrice = selectedCombination.optionPrice;
+        const totalBase = nights * currentBasePrice;
+        const discount = nights >= 7 ? totalBase * 0.10 : 0;
+        const afterDiscount = totalBase - discount;
+        const gst = afterDiscount * 0.18;
+        const finalPrice = Math.round(afterDiscount + gst);
+
+        const payload = {
+            checkIn: checkinInput.value,
+            checkOut: checkoutInput.value,
+            guests: guestsInput.value,
+            totalPrice: finalPrice,
+            paymentMethod: paymentMethod,
+            paymentStatus: paymentMethod === 'razorpay' ? 'paid' : 'pending',
+            selectedRooms: [
+                ...(selectedCombination.combo[4] > 0 ? [{ type: '4-bed', count: selectedCombination.combo[4], price: Math.round(pricePerNight * 1.8) }] : []),
+                ...(selectedCombination.combo[3] > 0 ? [{ type: '3-bed', count: selectedCombination.combo[3], price: Math.round(pricePerNight * 1.4) }] : []),
+                ...(selectedCombination.combo[2] > 0 ? [{ type: '2-bed', count: selectedCombination.combo[2], price: Math.round(pricePerNight * 1.0) }] : [])
+            ],
+            ...extraData
+        };
+        
+        const res = await fetch(`/listings/<%= listing._id %>/bookings/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        
+        return await res.json();
+    }
+
+    if (payLaterBtn) {
+        payLaterBtn.addEventListener('click', async () => {
+            if (!checkinInput.value || !checkoutInput.value || !selectedCombination) {
+                showFlash("Please select dates and rooms.", "error"); return;
+            }
+            payLaterBtn.disabled = true; payLaterBtn.innerText = "Processing...";
+            try {
+                const data = await submitBooking('pay_later');
+                if (data.success) {
+                    window.location.href = "/my-bookings";
+                } else {
+                    showFlash(data.message, 'error');
+                    payLaterBtn.disabled = false; payLaterBtn.innerText = "Pay Later";
+                }
+            } catch(err) {
+                console.error(err);
+                showFlash("Error creating booking", "error");
+                payLaterBtn.disabled = false; payLaterBtn.innerText = "Pay Later";
+            }
+        });
+    }
+
+    if(reserveBtn) {
+        reserveBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!checkinInput.value || !checkoutInput.value || !selectedCombination) {
+                showFlash("Please select dates and rooms.", "error");
+                return;
+            }
+
+            reserveBtn.disabled = true;
+            reserveBtn.innerText = "Processing...";
+
+            try {
+                const response = await fetch(`/listings/<%= listing._id %>/bookings/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        checkIn: checkinInput.value,
+                        checkOut: checkoutInput.value,
+                        guests: guestsInput.value,
+                        selectedRooms: [
+                            ...(selectedCombination.combo[4] > 0 ? [{ type: '4-bed', count: selectedCombination.combo[4], price: Math.round(pricePerNight * 1.8) }] : []),
+                            ...(selectedCombination.combo[3] > 0 ? [{ type: '3-bed', count: selectedCombination.combo[3], price: Math.round(pricePerNight * 1.4) }] : []),
+                            ...(selectedCombination.combo[2] > 0 ? [{ type: '2-bed', count: selectedCombination.combo[2], price: Math.round(pricePerNight * 1.0) }] : [])
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    showFlash(data.message, 'error');
+                    reserveBtn.disabled = false;
+                    reserveBtn.innerText = "Pay Now";
+                    return;
+                }
+
+                const options = {
+                    key: data.key_id,
+                    amount: parseInt(data.amount),
+                    currency: "INR",
+                    name: "Wanderlust",
+                    description: `Booking for ${data.listing_title}`,
+                    order_id: data.order_id,
+                    handler: async function (paymentResponse) {
+                        try {
+                            const verifyRes = await fetch(`/listings/<%= listing._id %>/bookings/payment/verify`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_order_id: paymentResponse.razorpay_order_id || data.order_id,
+                                    razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                                    razorpay_signature: paymentResponse.razorpay_signature,
+                                    booking_details: data.booking_details
+                                })
+                            });
+
+                            const verifyData = await verifyRes.json();
+                            if (verifyData.success) {
+                                const bookingData = await submitBooking('razorpay', {
+                                    razorpayOrderId: paymentResponse.razorpay_order_id || data.order_id,
+                                    razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                                    razorpaySignature: paymentResponse.razorpay_signature
+                                });
+                                
+                                if (bookingData.success) {
+                                    window.location.href = "/my-bookings";
+                                } else {
+                                    showFlash(bookingData.message || "Failed to save booking after payment", 'error');
+                                    reserveBtn.disabled = false; reserveBtn.innerText = "Pay Now";
+                                }
+                            } else {
+                                showFlash(verifyData.message || "Payment verification failed", 'error');
+                                reserveBtn.disabled = false;
+                                reserveBtn.innerText = "Pay Now";
+                            }
+                        } catch (err) {
+                            console.error("Verification endpoint error:", err);
+                            showFlash("Something went wrong during verification", 'error');
+                            reserveBtn.disabled = false;
+                            reserveBtn.innerText = "Pay Now";
+                        }
+                    },
+                    prefill: {
+                        name: "<%= currUser ? currUser.username : 'Wanderlust User' %>",
+                        email: "user@example.com",
+                        contact: "9000090000"
+                    },
+                    theme: {
+                        color: "#fe424d"
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response){
+                    showFlash("Payment failed: " + response.error.description, 'error');
+                    reserveBtn.disabled = false;
+                    reserveBtn.innerText = "Pay Now";
+                });
+                rzp.open();
+
+            } catch (err) {
+                console.error("Error initiating payment:", err);
+                showFlash("Could not initiate payment. Please try again.", "error");
+                reserveBtn.disabled = false;
+                reserveBtn.innerText = "Pay Now";
+            }
+        });
+    }
+
+    // Call once to hide if guests=0 or invalid
+    renderRoomOptions();
+</script>
