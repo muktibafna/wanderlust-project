@@ -1,7 +1,6 @@
 if(process.env.NODE_ENV != "production"){
     require("dotenv").config();
 }
-console.log(process.env.SECRET);
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -13,7 +12,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 
 const session = require("express-session");
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo').default;
 const flash = require("connect-flash");
 
 const passport = require("passport");
@@ -27,7 +26,6 @@ const bookingRouter = require("./routes/booking");
 const hostRouter = require("./routes/host");
 
 const dbUrl = process.env.ATLASDB_URL;
-console.log("DB URL:",dbUrl);
 
 main()
 .then(() => console.log("DB connected"))
@@ -51,8 +49,8 @@ app.use(express.static(
     path.join(__dirname, "public")
 ));
 
-const store = new MongoStore({
-    url: dbUrl,
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
     crypto: {
         secret: process.env.SECRET,
     },
