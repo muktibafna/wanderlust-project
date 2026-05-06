@@ -2,19 +2,21 @@
     box-sizing: border-box !important;
 }
 
-body {
-    font-family: "Inter", sans-serif !important;
+html, body {
+    width: 100%;
+    overflow-x: clip !important;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    font-family: "Inter", sans-serif !important;
     min-height: 100vh;
     background-color: #fffcfc;
     user-select: none !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
-    overflow-x: hidden !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23FF385C'%3E%3Cpath transform='rotate(-45 12 12)' d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E") 2 2, auto;
 }
 
@@ -36,21 +38,22 @@ textarea {
     -ms-user-select: text !important;
 }
 
-.container {
-    flex: 1;
+.container, main {
     width: 100%;
-    padding: 0 1rem;
+    max-width: 100vw;
+    padding: 0 10px;
+    flex: 1;
     margin: 0 auto;
-    max-width: 100%;
 }
 
 .navbar {
     background-color: white;
-    z-index: 1000 !important;
+    z-index: 1050 !important;
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    overflow: visible !important;
 }
 
 .sticky-top {
@@ -1188,16 +1191,14 @@ nav.navbar .container-fluid {
 }
 
 @media (max-width: 768px) {
+    .listing-card { width: 95% !important; margin: 15px auto !important; border: none !important; }
+    .navbar { width: 100% !important; padding: 10px !important; }
+    
     .row.mt-3.listing-row {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         gap: 0 !important;
-    }
-    .listing-card {
-        width: 95% !important;
-        margin: 10px auto !important;
-        border: none !important;
     }
     .listing-card img {
         width: 100% !important;
@@ -1413,7 +1414,9 @@ nav.navbar .container-fluid {
    ========================================= */
 .aurora-navbar {
     background-color: transparent !important;
-    position: relative;
+    position: sticky !important;
+    top: 0;
+    z-index: 99999 !important;
     /* Removed overflow: hidden to prevent clipping the user dropdown */
 }
 .aurora-bg {
@@ -1875,4 +1878,42 @@ body.skip-intro .glass-popup-form {
 
 body.skip-intro .ken-burns-slideshow {
     filter: brightness(0.4) !important;
+}
+
+/* =========================================
+   HEADER & FOOTER FINAL POLISH
+   ========================================= */
+.user-menu {
+    z-index: 9999 !important;
+    position: relative;
+    pointer-events: auto !important;
+}
+
+.dropdown-menu {
+    z-index: 9999 !important;
+}
+
+.search-container {
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.paper-plane-tracker i, .static-plane {
+    transform: rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+    .paper-plane-tracker {
+        display: none !important;
+    }
+    .dropdown-menu {
+        position: absolute !important;
+        right: 0 !important; /* Anchors safely to the right edge */
+        left: auto !important;
+        max-width: 85vw !important; /* Prevents extending off the left edge */
+        white-space: normal !important;
+    }
+    .dropdown-item {
+        white-space: normal !important; /* Prevents text overflow */
+    }
 }

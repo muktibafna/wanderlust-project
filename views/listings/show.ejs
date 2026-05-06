@@ -240,7 +240,7 @@
   
   <div class="col-lg-4 col-12 mt-4 mt-lg-0">
    
-    <div class="card border rounded-4 shadow-sm sticky-top" style="top: 100px; padding: 1.5rem; z-index: 10;">
+    <div class="card border rounded-4 shadow-sm sticky-top" style="top: 100px; padding: 1.5rem; z-index: 1;">
         <h4 class="fw-bold mb-3">₹ <%= listing.price.toLocaleString("en-IN") %> <span class="fs-6 fw-normal text-muted">night</span></h4>
         
         <form action="/listings/<%= listing._id %>/bookings" method="POST">

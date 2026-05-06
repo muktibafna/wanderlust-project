@@ -118,12 +118,33 @@ nav.navbar, footer, .site-footer { display: none !important; }
 document.addEventListener("DOMContentLoaded", () => {
     const bg = document.getElementById('ken-burns-bg');
     const popup = document.getElementById('glass-popup');
-    const hasError = popup.classList.contains('active');
+    const welcomeText = document.getElementById('immersive-welcome');
+    
+    const hasError = popup.classList.contains('active') || document.querySelector('.alert-danger');
 
-    if (!hasError) {
+    if (localStorage.getItem('introSeen') || hasError) {
+        // Skip intro
+        if (welcomeText) welcomeText.style.setProperty('display', 'none', 'important');
+        
+        bg.classList.add('blurred', 'no-anim');
+        bg.style.pointerEvents = 'none';
+        
+        popup.classList.add('active');
+        popup.style.opacity = '1';
+        popup.style.visibility = 'visible';
+    } else {
+        // Play intro
         setTimeout(() => {
             bg.classList.add('blurred');
             popup.classList.add('active');
+            
+            // Cleanup after animation
+            setTimeout(() => {
+                bg.style.pointerEvents = 'none';
+                if (welcomeText) welcomeText.style.setProperty('display', 'none', 'important');
+            }, 500); // Wait for transition to finish
+            
+            localStorage.setItem('introSeen', 'true');
         }, 3000);
     }
 });

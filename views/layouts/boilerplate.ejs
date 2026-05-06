@@ -1,5 +1,6 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Wanderlust</title>
-<link rel="stylesheet" href="/css/style.css"/>
+<link rel="stylesheet" href="/css/style.css?v=5.0"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
 rel="stylesheet" 
 integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
@@ -25,6 +26,34 @@ rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@4.1.2/dist/maplibre-gl.js"></script>
 
+<style>
+  /* ☢️ NUCLEAR Z-INDEX & OVERLAP FIX ☢️ */
+  .aurora-navbar, nav.navbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 2147483647 !important; /* Maximum possible CSS value */
+    transform: translateZ(0) !important; /* Force top-level GPU stacking context */
+  }
+  
+  .card.sticky-top {
+    z-index: 1 !important;
+    isolation: isolate !important; /* Traps the booking card in its own low-level layer */
+  }
+
+  /* ☢️ NUCLEAR MOBILE DROPDOWN FIX ☢️ */
+  @media (max-width: 768px) {
+    .navbar .dropdown-menu {
+      position: fixed !important;
+      top: 80px !important; /* Safely below the navbar */
+      right: 15px !important;
+      left: 15px !important; /* Stretches safely across the screen */
+      width: auto !important;
+      max-width: none !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+  }
+</style>
 <body class="<%= (success && success.length > 0) || (error && error.length > 0) ? 'skip-intro' : '' %>">
 
 <%- include("../includes/navbar.ejs")%>

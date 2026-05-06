@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top px-4 py-3 aurora-navbar" style="z-index: 1000 !important; position: relative;">
+<nav class="navbar navbar-expand-md bg-body-light border-bottom px-4 py-3 aurora-navbar" style="z-index: 99999 !important; overflow: visible !important; position: sticky !important; top: 0;">
   <div class="aurora-bg"></div>
-  <div class="container-fluid d-flex justify-content-between align-items-center">
+  <div class="container-fluid d-flex justify-content-between align-items-center" style="overflow: visible !important;">
 
     <a class="navbar-brand text-danger" href="/listings" style="font-size: 2rem; flex-shrink: 0;">
       <i class="fa-regular fa-compass"></i>
@@ -19,11 +19,6 @@
     </div>
 
     <div class="d-flex align-items-center gap-3 user-actions-container" style="flex-shrink: 0;">
-      <button class="navbar-toggler collapsed d-md-none border-0 shadow-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
 
       <div class="d-none d-md-flex align-items-center gap-3">
         <% if(currUser) { %>
@@ -34,7 +29,7 @@
       </div>
 
       <div class="dropdown">
-        <div class="user-menu border rounded-pill p-2 d-flex align-items-center gap-2 hover-shadow cursor-pointer" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; z-index: 1100 !important; pointer-events: auto !important; position: relative;">
+        <div class="user-menu border rounded-pill p-2 d-flex align-items-center gap-2 hover-shadow cursor-pointer" id="userMenuDropdown" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" style="cursor: pointer; z-index: 100000 !important; pointer-events: auto !important; position: relative;">
           <i class="fa-solid fa-bars ms-2"></i>
           <div class="user-avatar bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: 700;">
             <% if(currUser) { %>
@@ -44,21 +39,21 @@
             <% } %>
           </div>
         </div>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenuDropdown" style="z-index: 1200 !important;">
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenuDropdown" style="z-index: 999999 !important; white-space: normal !important;">
           <% if(!currUser) { %>
-            <li><a class="dropdown-item fw-bold" href="/signup"><i class="fa-solid fa-user-plus text-danger"></i> Sign up</a></li>
-            <li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
+            <li><a class="dropdown-item fw-bold" href="/signup" style="white-space: normal !important;"><i class="fa-solid fa-user-plus text-danger"></i> Sign up</a></li>
+            <li><a class="dropdown-item" href="/login" style="white-space: normal !important;"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
+            <li><a class="dropdown-item" href="/listings/new" style="white-space: normal !important;"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
           <% } else { %>
-            <li><a class="dropdown-item fw-bold" href="/my-bookings"><i class="fa-solid fa-suitcase"></i> Trips</a></li>
-            <li><a class="dropdown-item fw-bold" href="/wishlist"><i class="fa-solid fa-heart"></i> Wishlists</a></li>
+            <li><a class="dropdown-item fw-bold" href="/my-bookings" style="white-space: normal !important;"><i class="fa-solid fa-suitcase"></i> Trips</a></li>
+            <li><a class="dropdown-item fw-bold" href="/wishlist" style="white-space: normal !important;"><i class="fa-solid fa-heart"></i> Wishlists</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
-            <li><a class="dropdown-item" href="/host/dashboard"><i class="fa-solid fa-chart-line"></i> Host Dashboard</a></li>
-            <li><a class="dropdown-item" href="/host/profile"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a class="dropdown-item" href="/listings/new" style="white-space: normal !important;"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
+            <li><a class="dropdown-item" href="/host/dashboard" style="white-space: normal !important;"><i class="fa-solid fa-chart-line"></i> Host Dashboard</a></li>
+            <li><a class="dropdown-item" href="/host/profile" style="white-space: normal !important;"><i class="fa-solid fa-gear"></i> Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log out</a></li>
+            <li><a class="dropdown-item" href="/logout" style="white-space: normal !important;"><i class="fa-solid fa-right-from-bracket"></i> Log out</a></li>
           <% } %>
         </ul>
       </div>
