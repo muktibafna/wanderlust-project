@@ -1,7 +1,65 @@
 <% layout("/layouts/boilerplate")%>
 
-    <body>
-        <div class="filters-main d-flex flex-column flex-lg-row align-items-center mt-3 mb-4 gap-4">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<div class="hero-full-width mb-4">
+    <div class="swiper hero-swiper">
+        <div class="swiper-wrapper">
+            <!-- Slide 1 -->
+            <div class="swiper-slide">
+                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&q=80&w=2000');">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center text-white">
+                        <h1 class="hero-title display-3 fw-bold mb-3">Escape to the Beach</h1>
+                        <p class="hero-subtitle fs-5 mb-4">Discover the most pristine coastlines for your next getaway.</p>
+                        <a href="/listings?category=Trending" class="btn btn-hero-cta rounded-pill px-5 py-3 fs-5 fw-bold">Explore Now</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="swiper-slide">
+                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000');">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center text-white">
+                        <h1 class="hero-title display-3 fw-bold mb-3">Mountain Retreats</h1>
+                        <p class="hero-subtitle fs-5 mb-4">Elevate your stay with breathtaking views and fresh air.</p>
+                        <a href="/listings?category=Mountains" class="btn btn-hero-cta rounded-pill px-5 py-3 fs-5 fw-bold">Book a Cabin</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="swiper-slide">
+                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=2000');">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center text-white">
+                        <h1 class="hero-title display-3 fw-bold mb-3">Luxury Villas</h1>
+                        <p class="hero-subtitle fs-5 mb-4">Experience world-class amenities and exclusive comfort.</p>
+                        <a href="/listings?category=Luxe" class="btn btn-hero-cta rounded-pill px-5 py-3 fs-5 fw-bold">View Premium</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="swiper-slide">
+                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&q=80&w=2000');">
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center text-white">
+                        <h1 class="hero-title display-3 fw-bold mb-3">City Stays</h1>
+                        <p class="hero-subtitle fs-5 mb-4">Immerse yourself in the vibrant culture of iconic cities.</p>
+                        <a href="/listings?category=Iconic cities" class="btn btn-hero-cta rounded-pill px-5 py-3 fs-5 fw-bold">Discover Cities</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="swiper-button-next text-white"></div>
+        <div class="swiper-button-prev text-white"></div>
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+<div class="filters-main d-flex flex-column flex-lg-row align-items-center mb-4 gap-4">
             <div class="filters-container">
                 <button class="scroll-btn left" id="scrollLeft"><i class="fa-solid fa-chevron-left"></i></button>
                 <div id="filters" class="d-flex align-items-center flex-grow-1 w-100 overflow-auto"
@@ -83,7 +141,7 @@
             </div>
         </div>
 
-        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 listing-row">
             <% for(let listing of allListings){ %>
                 <% const isWishlist=currUser && currUser.wishlist && currUser.wishlist.some(w=> w.toString() ===
                     listing._id.toString()); %>
@@ -141,7 +199,29 @@
                     <% } %>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const swiper = new Swiper('.hero-swiper', {
+                    loop: true,
+                    effect: 'fade',
+                    fadeEffect: {
+                        crossFade: true
+                    },
+                    autoplay: {
+                        delay: 4500,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+            });
 
             let taxSwitch = document.getElementById("flexSwitchCheckDefault");
             if (taxSwitch) {
@@ -186,4 +266,3 @@
                 toggleArrows();
             }
         </script>
-    </body>

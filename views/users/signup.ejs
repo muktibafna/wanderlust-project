@@ -1,13 +1,25 @@
 <% layout("/layouts/boilerplate") %>
 
-<!-- Full Screen Fixed Grid Background -->
-<div id="dynamic-grid-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; overflow: hidden; background-color: #111; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(5, 1fr); filter: blur(5px) brightness(0.6); transform: scale(1.05);">
-    <!-- Grid items injected by JS -->
-</div>
+<% const hasError = (typeof error !== 'undefined' && error && error.length > 0); %>
 
-<div class="d-flex align-items-center justify-content-center w-100" style="min-height: calc(100vh - 120px); padding: 2rem 0;">
-    <!-- Glassmorphism Auth Card -->
-    <div class="glass-auth-card animate__animated animate__fadeInUp">
+<!-- Immersive Auth Wrapper -->
+<div class="immersive-auth-wrapper <%= hasError ? 'skip-intro' : '' %>">
+    <!-- 3D Ken Burns Slideshow -->
+    <div id="ken-burns-bg" class="ken-burns-slideshow <%= hasError ? 'blurred' : '' %>">
+        <div class="ken-burns-img img-1 <%= hasError ? 'no-anim' : '' %>"></div>
+        <div class="ken-burns-img img-2 <%= hasError ? 'no-anim' : '' %>"></div>
+        <div class="ken-burns-img img-3 <%= hasError ? 'no-anim' : '' %>"></div>
+    </div>
+
+    <% if (!hasError) { %>
+    <!-- Immersive Welcome Text -->
+    <div id="immersive-welcome" class="immersive-welcome-text">
+        Wanderlust
+    </div>
+    <% } %>
+
+    <!-- Glassmorphism Auth Card (Popup) -->
+    <div id="glass-popup" class="glass-popup-form <%= hasError ? 'active' : '' %>">
         <div class="text-center mb-4">
             <div class="auth-brand-logo mb-2">
                 <i class="fa-solid fa-plane-departure fs-1 text-white"></i>
@@ -16,30 +28,30 @@
             <p class="auth-subtitle text-white-50" style="font-size: 1rem;">Join Wanderlust and unlock the globe</p>
         </div>
 
-        <form action="/signup" method="POST">
+        <form action="/signup" method="POST" class="needs-validation" novalidate>
             <div class="mb-4 position-relative">
                 <label for="username" class="form-label text-white-50 small text-uppercase fw-bold" style="letter-spacing: 1px;">Username</label>
-                <div class="input-group glass-input-group">
-                    <span class="input-group-text bg-transparent border-0 text-white-50 px-3"><i class="fa-regular fa-user"></i></span>
-                    <input name="username" id="username" type="text" class="form-control glass-input shadow-none" placeholder="Choose a username" required>
+                <div class="input-group">
+                    <span class="input-group-text glass-input-group-text px-3"><i class="fa-regular fa-user"></i></span>
+                    <input name="username" id="username" type="text" class="form-control glass-input-premium shadow-none" placeholder="Choose a username" required>
                 </div>
                 <div class="invalid-feedback text-warning ms-1 mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>Please choose a unique username.</div>
             </div>
 
             <div class="mb-4 position-relative">
                 <label for="email" class="form-label text-white-50 small text-uppercase fw-bold" style="letter-spacing: 1px;">Email</label>
-                <div class="input-group glass-input-group">
-                    <span class="input-group-text bg-transparent border-0 text-white-50 px-3"><i class="fa-regular fa-envelope"></i></span>
-                    <input name="email" id="email" type="email" class="form-control glass-input shadow-none" placeholder="Enter your email" required>
+                <div class="input-group">
+                    <span class="input-group-text glass-input-group-text px-3"><i class="fa-regular fa-envelope"></i></span>
+                    <input name="email" id="email" type="email" class="form-control glass-input-premium shadow-none" placeholder="Enter your email" required>
                 </div>
                 <div class="invalid-feedback text-warning ms-1 mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>Please enter a valid email.</div>
             </div>
 
             <div class="mb-5 position-relative">
                 <label for="password" class="form-label text-white-50 small text-uppercase fw-bold m-0" style="letter-spacing: 1px;">Password</label>
-                <div class="input-group glass-input-group">
-                    <span class="input-group-text bg-transparent border-0 text-white-50 px-3"><i class="fa-solid fa-lock"></i></span>
-                    <input name="password" id="password" type="password" class="form-control glass-input shadow-none" placeholder="Create your password" required minlength="6">
+                <div class="input-group">
+                    <span class="input-group-text glass-input-group-text px-3"><i class="fa-solid fa-lock"></i></span>
+                    <input name="password" id="password" type="password" class="form-control glass-input-premium shadow-none" placeholder="Create your password" required minlength="6">
                 </div>
                 <div class="invalid-feedback text-warning ms-1 mt-1"><i class="fa-solid fa-circle-exclamation me-1"></i>Please enter a password (min 6 chars).</div>
             </div>
@@ -56,88 +68,11 @@
     </div>
 </div>
 
-<!-- Custom Premium Famous Landmarks Data -->
-
 <style>
-/* Reset container width constraint for this specific page */
-.container {
-    max-width: 100% !important;
-    padding: 0 !important;
-}
-
 /* Base resets to hide header and footer on auth pages */
-nav.navbar, footer { display: none !important; }
+nav.navbar, footer, .site-footer { display: none !important; }
 
-/* Grid Background Styles */
-.bg-grid-item {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: center;
-}
-
-.bg-grid-item.pop {
-    transform: scale(1.25);
-    z-index: 5;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-@media (max-width: 768px) {
-    #dynamic-grid-bg {
-        grid-template-columns: repeat(6, 1fr) !important;
-        grid-template-rows: repeat(5, 1fr) !important;
-    }
-}
-
-@media (max-width: 576px) {
-    #dynamic-grid-bg {
-        grid-template-columns: repeat(4, 1fr) !important;
-        grid-template-rows: repeat(6, 1fr) !important;
-    }
-}
-
-/* Premium Glassmorphism styling */
-.glass-auth-card {
-    background: rgba(20, 20, 20, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.05);
-    border-radius: 24px;
-    padding: 3rem 2.5rem;
-    width: 100%;
-    max-width: 440px;
-    z-index: 10;
-}
-
-.glass-input-group {
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.glass-input-group:focus-within {
-    background: rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
-}
-
-.glass-input {
-    background: transparent !important;
-    border: none !important;
-    color: white !important;
-    padding: 0.85rem 1rem 0.85rem 0 !important;
-    font-size: 1rem;
-}
-
-.glass-input::placeholder {
-    color: rgba(255, 255, 255, 0.3) !important;
-}
-
+/* Custom Overrides for this page */
 .btn-premium-submit {
     background: linear-gradient(135deg, #FF385C 0%, #d81b40 100%);
     border: none;
@@ -161,76 +96,35 @@ nav.navbar, footer { display: none !important; }
 .hover-scale:hover {
     transform: scale(1.05);
 }
-</style>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+/* Skip intro when error exists */
+.skip-intro .ken-burns-img.no-anim {
+    animation: none !important;
+    opacity: 1 !important;
+}
+.skip-intro .ken-burns-img.no-anim.img-1,
+.skip-intro .ken-burns-img.no-anim.img-2 {
+    opacity: 0 !important;
+}
+.skip-intro .ken-burns-img.no-anim.img-3 {
+    opacity: 1 !important;
+}
+.skip-intro .immersive-welcome-text {
+    display: none !important;
+}
+</style>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    
-    const validImages = [
-        {url: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=80"}, // Taj Mahal
-        {url: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80"}, // Colosseum
-        {url: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80"}, // Eiffel Tower
-        {url: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80"}, // Machu Picchu
-        {url: "https://images.unsplash.com/photo-1508804185872-d7badad00f43?auto=format&fit=crop&w=800&q=80"}, // Great Wall
-        {url: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80"}, // Pyramids
-        {url: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80"}, // Christ Redeemer
-        {url: "https://images.unsplash.com/photo-1513635269975-5969336ac1cb?auto=format&fit=crop&w=800&q=80"}, // Big Ben
-        {url: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80"}, // Petra
-        {url: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80"}, // Santorini
-        {url: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80"}, // NYC
-        {url: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=800&q=80"}, // Mt Fuji
-        {url: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80"}, // Sydney Opera
-        {url: "https://images.unsplash.com/photo-1518182170546-076616fd4aa8?auto=format&fit=crop&w=800&q=80"}, // Chichen Itza
-        {url: "https://images.unsplash.com/photo-1615551043360-33de8b5f410c?auto=format&fit=crop&w=800&q=80"}  // Grand Canyon
-    ];
+    const bg = document.getElementById('ken-burns-bg');
+    const popup = document.getElementById('glass-popup');
+    const hasError = popup.classList.contains('active');
 
-    if(validImages.length === 0) return;
-
-    const gridBg = document.getElementById("dynamic-grid-bg");
-    const numColumns = window.innerWidth <= 576 ? 4 : window.innerWidth <= 768 ? 6 : 8;
-    const numRows = window.innerWidth <= 576 ? 6 : window.innerWidth <= 768 ? 5 : 5;
-    const totalTiles = numColumns * numRows;
-
-    // Fill grid with images
-    for (let i = 0; i < totalTiles; i++) {
-        const img = document.createElement("img");
-        // Get random image from our array
-        const randomImgUrl = validImages[Math.floor(Math.random() * validImages.length)].url;
-        img.src = randomImgUrl;
-        img.className = "bg-grid-item";
-        gridBg.appendChild(img);
+    if (!hasError) {
+        setTimeout(() => {
+            bg.classList.add('blurred');
+            popup.classList.add('active');
+        }, 3000);
     }
-
-    // Animation Loop
-    const allTiles = document.querySelectorAll(".bg-grid-item");
-    const authCard = document.querySelector(".glass-auth-card");
-
-    setInterval(() => {
-        // Remove pop from all
-        allTiles.forEach(tile => tile.classList.remove("pop"));
-        
-        // Calculate dynamic fully visible tiles
-        const authCardRect = authCard.getBoundingClientRect();
-        const visibleTiles = Array.from(allTiles).filter(tile => {
-            const r = tile.getBoundingClientRect();
-            // True if completely NOT intersecting with the glass auth card
-            return (r.right <= authCardRect.left || r.left >= authCardRect.right || r.bottom <= authCardRect.top || r.top >= authCardRect.bottom);
-        });
-
-        if(visibleTiles.length === 0) return;
-        
-        // Pick a random tile from ONLY the fully visible ones
-        const randomTileIndex = Math.floor(Math.random() * visibleTiles.length);
-        const tileToPop = visibleTiles[randomTileIndex];
-        
-        // Optionally swap its image before it pops to keep UI fresh
-        tileToPop.src = validImages[Math.floor(Math.random() * validImages.length)].url;
-        
-        // Add pop class
-        tileToPop.classList.add("pop");
-    }, 1500);
-
 });
 </script>

@@ -1,100 +1,67 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top px-4 py-3">
-  <div class="container-fluid align-items-center position-relative">
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top px-4 py-3 aurora-navbar" style="z-index: 1000 !important; position: relative;">
+  <div class="aurora-bg"></div>
+  <div class="container-fluid d-flex justify-content-between align-items-center">
 
-    <a class="navbar-brand text-danger" href="/listings" style="font-size: 2rem; z-index: 20;">
+    <a class="navbar-brand text-danger" href="/listings" style="font-size: 2rem; flex-shrink: 0;">
       <i class="fa-regular fa-compass"></i>
     </a>
 
+    <div class="search-container d-none d-md-flex mx-auto" style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
+      <form class="d-flex w-100" role="search" action="/listings" method="GET">
+        <div class="search-bar warp-search-bar border rounded-pill shadow-sm d-flex align-items-center py-2 px-2 m-0 w-100" style="cursor: text;">
+          <input class="form-control border-0 shadow-none px-3 m-0 warp-search-input" type="search" placeholder="Search destinations" aria-label="Search" name="q" id="search-input" list="search-suggestions" autocomplete="off">
+          <datalist id="search-suggestions"></datalist>
+          <button class="btn bg-danger text-white rounded-circle d-flex align-items-center justify-content-center border-0 p-0 m-0 warp-search-btn" type="submit" style="width: 32px; height: 32px; flex-shrink: 0;">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+          </button>
+        </div>
+      </form>
+    </div>
 
-    <button
-      class="navbar-toggler collapsed d-flex d-md-none flex-column justify-content-around p-0 border-0 shadow-none"
-      type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" style="width: 28px; height: 18px;">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
+    <div class="d-flex align-items-center gap-3 user-actions-container" style="flex-shrink: 0;">
+      <button class="navbar-toggler collapsed d-md-none border-0 shadow-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
 
-
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-
-      <div class="navbar-nav search-container d-none d-md-flex position-absolute"
-        style="z-index: 10; left: 40%; top: 0; bottom: 0; margin: auto; height: max-content; transform: translateX(-50%);">
-        <form class="d-flex" role="search" action="/listings" method="GET">
-          <div class="search-bar border rounded-pill shadow-sm d-flex align-items-center py-2 px-2 m-0 bg-white"
-            style="cursor: text;">
-            <input class="form-control border-0 shadow-none px-3 m-0" type="search" placeholder="Search destinations"
-              aria-label="Search" name="q" id="search-input" list="search-suggestions" autocomplete="off"
-              style="width: 350px; font-size: 0.95rem; background: transparent; outline: none; box-shadow: none;">
-            <datalist id="search-suggestions"></datalist>
-            <button
-              class="btn bg-danger text-white rounded-circle d-flex align-items-center justify-content-center border-0 p-0 m-0"
-              type="submit" style="width: 32px; height: 32px; flex-shrink: 0;">
-              <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
-            </button>
-          </div>
-        </form>
-      </div>
-
-
-      <div class="navbar-nav ms-auto user-actions-container d-flex align-items-center gap-3">
+      <div class="d-none d-md-flex align-items-center gap-3">
         <% if(currUser) { %>
-          <a class="nav-link fw-semibold rounded-pill hover-bg-light px-3 py-2 d-none d-lg-block text-dark"
-            href="/wishlist">Wishlists</a>
-          <a class="nav-link fw-semibold rounded-pill hover-bg-light px-3 py-2 d-none d-lg-block text-dark"
-            href="/host/dashboard">Host Dashboard</a>
-          <% } %>
-            <a class="nav-link wanderlust-home-link fw-semibold rounded-pill hover-bg-light px-3 py-2 d-none d-lg-block text-dark"
-              href="/listings/new">Wanderlust your home</a>
-
-            <div class="user-menu border rounded-pill p-2 d-flex align-items-center gap-2 hover-shadow cursor-pointer"
-              id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-              <i class="fa-solid fa-bars ms-2"></i>
-              <div
-                class="user-avatar bg-dark text-white rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: 700;">
-                <% if(currUser) { %>
-                  <%= currUser.username.charAt(0).toUpperCase() %>
-                    <% } else { %>
-                      <i class="fa-solid fa-user" style="font-size: 0.9rem;"></i>
-                      <% } %>
-              </div>
-            </div>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenuDropdown">
-              <% if(!currUser) { %>
-                <li><a class="dropdown-item fw-bold" href="/signup"><i class="fa-solid fa-user-plus text-danger"></i>
-                    Sign up</a></li>
-                <li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust
-                    your home</a></li>
-                <% } else { %>
-                  <li><a class="dropdown-item fw-bold" href="/my-bookings"><i class="fa-solid fa-suitcase"></i>
-                      Trips</a></li>
-                  <li><a class="dropdown-item fw-bold" href="/wishlist"><i class="fa-solid fa-heart"></i> Wishlists</a>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i>
-                      Wanderlust your home</a></li>
-                  <li><a class="dropdown-item" href="/host/dashboard"><i class="fa-solid fa-chart-line"></i> Host
-                      Dashboard</a></li>
-                  <li><a class="dropdown-item" href="/host/profile"><i class="fa-solid fa-gear"></i> Settings</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
-                  </li>
-                  <% } %>
-            </ul>
+          <a class="nav-link fw-semibold rounded-pill hover-bg-light px-3 py-2 text-dark" href="/wishlist">Wishlists</a>
+          <a class="nav-link fw-semibold rounded-pill hover-bg-light px-3 py-2 text-dark" href="/host/dashboard">Host Dashboard</a>
+        <% } %>
+        <a class="nav-link wanderlust-home-link fw-semibold rounded-pill hover-bg-light px-3 py-2 text-dark" href="/listings/new">Wanderlust your home</a>
       </div>
 
+      <div class="dropdown">
+        <div class="user-menu border rounded-pill p-2 d-flex align-items-center gap-2 hover-shadow cursor-pointer" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; z-index: 1100 !important; pointer-events: auto !important; position: relative;">
+          <i class="fa-solid fa-bars ms-2"></i>
+          <div class="user-avatar bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem; font-weight: 700;">
+            <% if(currUser) { %>
+              <%= currUser.username.charAt(0).toUpperCase() %>
+            <% } else { %>
+              <i class="fa-solid fa-user" style="font-size: 0.9rem;"></i>
+            <% } %>
+          </div>
+        </div>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenuDropdown" style="z-index: 1200 !important;">
+          <% if(!currUser) { %>
+            <li><a class="dropdown-item fw-bold" href="/signup"><i class="fa-solid fa-user-plus text-danger"></i> Sign up</a></li>
+            <li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-to-bracket"></i> Log in</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
+          <% } else { %>
+            <li><a class="dropdown-item fw-bold" href="/my-bookings"><i class="fa-solid fa-suitcase"></i> Trips</a></li>
+            <li><a class="dropdown-item fw-bold" href="/wishlist"><i class="fa-solid fa-heart"></i> Wishlists</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings/new"><i class="fa-solid fa-house-chimney-user"></i> Wanderlust your home</a></li>
+            <li><a class="dropdown-item" href="/host/dashboard"><i class="fa-solid fa-chart-line"></i> Host Dashboard</a></li>
+            <li><a class="dropdown-item" href="/host/profile"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Log out</a></li>
+          <% } %>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

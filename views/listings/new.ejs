@@ -1,45 +1,44 @@
 <% layout("/layouts/boilerplate")%>
 
-<div class="auth-container mt-5 mb-5 pb-5">
-    <div class="auth-card" style="max-width: 700px;">
+<div class="new-listing-wrapper">
+    <div class="new-listing-card">
         <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2 text-dark">Add New Listing</h2>
-            <p class="text-muted">Fill in the details below to start your hosting journey.</p>
+            <div class="new-listing-icon mb-3">
+                <i class="fa-solid fa-house-chimney-user"></i>
+            </div>
+            <h2 class="fw-bold mb-2 text-dark" style="font-size: 1.8rem;">List your property</h2>
+            <p class="text-muted" style="font-size: 0.95rem;">Share your space with travelers from around the world.</p>
         </div>
 
         <form method="POST" action="/Listings" novalidate class="needs-validation" enctype="multipart/form-data">
             
-            
             <div class="mb-4">
                 <label for="title" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Property Title</label>
-                <input name="listing[title]" id="title" placeholder="e.g. Modern Beachfront Villa" type="text" class="form-control auth-input shadow-none" required>
+                <input name="listing[title]" id="title" placeholder="e.g. Modern Beachfront Villa" type="text" class="form-control new-listing-input shadow-none" required>
                 <div class="invalid-feedback">Please provide a catchy title.</div>
             </div>
 
-           
             <div class="mb-4">
                 <label for="description" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Description</label>
-                <textarea name="listing[description]" id="description" placeholder="Share what makes your place special..." class="form-control auth-input shadow-none" rows="4" required></textarea>
+                <textarea name="listing[description]" id="description" placeholder="Share what makes your place special..." class="form-control new-listing-input shadow-none" rows="4" required></textarea>
                 <div class="invalid-feedback">Tell your guests more about the property.</div>
             </div>
 
-            
             <div class="mb-4">
                 <label for="image" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Upload Cover Image</label>
-                <input name="listing[image]" id="image" type="file" class="form-control auth-input shadow-none" required>
+                <input name="listing[image]" id="image" type="file" class="form-control new-listing-input shadow-none" required>
                 <div class="invalid-feedback">Please upload a property photo.</div>
             </div>
 
-           
             <div class="row g-4 mb-4">
                 <div class="col-md-6 text-start">
                     <label for="price" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Price per Night (₹)</label>
-                    <input name="listing[price]" id="price" placeholder="1200" type="number" class="form-control auth-input shadow-none" required>
+                    <input name="listing[price]" id="price" placeholder="1200" type="number" class="form-control new-listing-input shadow-none" required>
                     <div class="invalid-feedback">Please set a price.</div>
                 </div>
                 <div class="col-md-6 text-start">
                     <label for="category" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Vibe/Category</label>
-                    <select name="listing[category]" id="category" class="form-select auth-input shadow-none" required style="padding: 0.75rem 1rem;">
+                    <select name="listing[category]" id="category" class="form-select new-listing-input shadow-none" required>
                         <option value="" disabled selected>Select category</option>
                         <option value="Trending">Trending</option>
                         <option value="Rooms">Rooms</option>
@@ -64,34 +63,31 @@
             <div class="row g-4 mb-4">
                 <div class="col-md-6 text-start">
                     <label for="location" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Location</label>
-                    <input name="listing[location]" id="location" placeholder="Jaipur, Rajasthan" type="text" class="form-control auth-input shadow-none" required>
+                    <input name="listing[location]" id="location" placeholder="Jaipur, Rajasthan" type="text" class="form-control new-listing-input shadow-none" required>
                     <div class="invalid-feedback">Please provide a location.</div>
                 </div>
                 <div class="col-md-6 text-start">
                     <label for="country" class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Country</label>
-                    <input name="listing[country]" id="country" placeholder="India" type="text" class="form-control auth-input shadow-none" required>
+                    <input name="listing[country]" id="country" placeholder="India" type="text" class="form-control new-listing-input shadow-none" required>
                     <div class="invalid-feedback">Please provide a country.</div>
                 </div>
             </div>
 
-            
             <div class="mb-4">
                 <label class="form-label fw-bold small text-uppercase" style="letter-spacing: 0.5px;">Amenities</label>
-                <div class="row g-2">
+                <div class="row g-3">
                     <% ["Wifi", "Parking", "Kitchen", "AC", "Pool", "TV", "Washer", "Gym"].forEach(amenity => { %>
                         <div class="col-6 col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="listing[amenities][]" value="<%= amenity %>" id="amenity-<%= amenity %>">
-                                <label class="form-check-label small" for="amenity-<%= amenity %>">
-                                    <%= amenity %>
-                                </label>
-                            </div>
+                            <label class="amenity-chip" for="amenity-<%= amenity %>">
+                                <input class="form-check-input d-none" type="checkbox" name="listing[amenities][]" value="<%= amenity %>" id="amenity-<%= amenity %>">
+                                <span class="amenity-chip-label"><%= amenity %></span>
+                            </label>
                         </div>
                     <% }) %>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-wanderlust w-100 py-3 mt-4 fw-bold fs-5 shadow-sm">Submit Property</button>
+            <button type="submit" class="btn btn-wanderlust w-100 py-3 mt-4 fw-bold fs-5 rounded-pill">Submit Property</button>
 
         </form>
     </div>

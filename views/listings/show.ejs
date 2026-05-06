@@ -27,7 +27,7 @@
         </div>
 
         <p>
-          <i><%= listing.owner.username %></i>
+          <i><%= listing.owner?.username || 'Unknown Owner' %></i>
         </p>
 
         <p class="card-text mb-2">
@@ -41,7 +41,7 @@
       </div>
 
 
-      <% if(currUser && listing.owner._id.equals(currUser._id)){ %>
+      <% if(currUser && listing.owner && listing.owner._id.equals(currUser._id)){ %>
 
         <div class="btns mt-3">
 
@@ -78,7 +78,7 @@
     <hr>
 
 
-    <% if(currUser && !currUser._id.equals(listing.owner._id)){ %>
+    <% if(currUser && (!listing.owner || !currUser._id.equals(listing.owner._id))){ %>
 
       <h4>Leave a Review</h4>
 
@@ -142,7 +142,7 @@
 
       </form>
 
-    <% } else if(currUser && currUser._id.equals(listing.owner._id)) { %>
+    <% } else if(currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
       <div class="alert alert-info py-2"><i class="fa-solid fa-circle-info me-2"></i>You cannot review your own listing.</div>
     <% } else { %>
 
@@ -287,12 +287,12 @@
                 </div>
             </div>
             
-            <% if(currUser && !currUser._id.equals(listing.owner._id)) { %>
+            <% if(currUser && (!listing.owner || !currUser._id.equals(listing.owner._id))) { %>
                 <div class="d-flex gap-2">
                     <button type="button" id="pay-later-btn" class="btn btn-outline-dark w-50 py-3 rounded-4 fw-bold fs-6 mt-3">Pay Later</button>
                     <button type="button" id="reserve-btn" class="btn btn-danger w-50 py-3 rounded-4 fw-bold fs-6 text-white mt-3" style="background-color: #fe424d; border: none; box-shadow: 0 4px 15px rgba(254, 66, 77, 0.4);">Pay Now</button>
                 </div>
-            <% } else if (currUser && currUser._id.equals(listing.owner._id)) { %>
+            <% } else if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
                 <div class="alert alert-warning py-3 text-center rounded-4 fw-bold mt-3 mb-0" style="background-color: #fff9e6; border: 1px solid #ffd600; color: #b28b00;">
                     <i class="fa-solid fa-ban me-2"></i> You cannot book your own listing
                 </div>

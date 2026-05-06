@@ -1,14 +1,69 @@
-<footer>
-    <div class="f-info text-center d-flex flex-column align-items-center justify-content-center bg-light py-3 border-top mt-auto">
-        <div class="f-info-socials mb-2 fs-5">
-            <i class="fa-brands fa-square-facebook mx-2 hover-opacity-75"></i>
-            <i class="fa-brands fa-square-instagram mx-2 hover-opacity-75"></i>
-            <i class="fa-brands fa-linkedin mx-2 hover-opacity-75"></i>
+<footer class="site-footer position-relative">
+    <div class="paper-plane-tracker">
+        <i class="fa-solid fa-paper-plane"></i>
+    </div>
+    
+    <div class="f-info text-center d-flex flex-column align-items-center justify-content-center py-5 position-relative" style="z-index: 2;">
+        
+        <div class="boarding-pass-grid mb-4">
+            <div class="boarding-pass">
+                <div class="bp-content">
+                    <span class="bp-label">PASSENGER INFO</span>
+                    <span class="bp-title">About Us</span>
+                </div>
+            </div>
+            <div class="boarding-pass">
+                <div class="bp-content">
+                    <span class="bp-label">SECURITY CLEARANCE</span>
+                    <span class="bp-title">Privacy</span>
+                </div>
+            </div>
+            <div class="boarding-pass">
+                <div class="bp-content">
+                    <span class="bp-label">FLIGHT RULES</span>
+                    <span class="bp-title">Terms</span>
+                </div>
+            </div>
         </div>
-        <div class="f-info-brand mb-2">&copy; <%= new Date().getFullYear() %> Wanderlust Private Limited</div>
-        <div class="f-info-links">
-            <a href="/privacy" class="text-decoration-none text-dark me-3 hover-underline">Privacy</a>
-            <a href="/terms" class="text-decoration-none text-dark hover-underline">Terms</a>
+
+        <div class="f-info-socials mb-3 fs-4 text-muted">
+            <i class="fa-brands fa-square-facebook mx-3 hover-opacity-75"></i>
+            <i class="fa-brands fa-square-instagram mx-3 hover-opacity-75"></i>
+            <i class="fa-brands fa-linkedin mx-3 hover-opacity-75"></i>
+        </div>
+        <div class="f-info-brand text-muted opacity-75">
+            &copy; <%= new Date().getFullYear() %> Wanderlust Private Limited
+            <i class="fa-solid fa-paper-plane static-plane"></i>
         </div>
     </div>
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const footer = document.querySelector('.site-footer');
+    const plane = document.querySelector('.paper-plane-tracker');
+
+    // Mouse Tracking Paper Plane (Desktop only)
+    if (footer && plane && window.innerWidth > 768) {
+        const planeSize = 28;
+        footer.addEventListener('mousemove', (e) => {
+            const rect = footer.getBoundingClientRect();
+            const x = e.clientX - rect.left - (planeSize / 2);
+            const y = e.clientY - rect.top - (planeSize / 2);
+            
+            // Calculate tilt based on movement direction
+            const centerX = rect.width / 2;
+            const cursorX = e.clientX - rect.left;
+            const tilt = (cursorX - centerX) * 0.03;
+
+            // Base rotation of -45deg + dynamic tilt
+            plane.style.transform = `translate(${x}px, ${y}px) rotate(${tilt - 45}deg)`;
+            plane.style.opacity = '1';
+        });
+
+        footer.addEventListener('mouseleave', () => {
+            plane.style.opacity = '0';
+        });
+    }
+});
+</script>
