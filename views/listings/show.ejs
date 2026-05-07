@@ -613,8 +613,8 @@
                     },
                     prefill: {
                         name: "<%= currUser ? currUser.username : 'Wanderlust User' %>",
-                        email: "user@example.com",
-                        contact: "9000090000"
+                        email: "<%= currUser ? currUser.email : 'guest@wanderlust.com' %>",
+                        contact: "8799912441"
                     },
                     theme: {
                         color: "#fe424d"

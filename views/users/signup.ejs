@@ -3,23 +3,21 @@
 <% const hasError = (typeof error !== 'undefined' && error && error.length > 0); %>
 
 <!-- Immersive Auth Wrapper -->
-<div class="immersive-auth-wrapper <%= hasError ? 'skip-intro' : '' %>">
+<div class="immersive-auth-wrapper">
     <!-- 3D Ken Burns Slideshow -->
-    <div id="ken-burns-bg" class="ken-burns-slideshow <%= hasError ? 'blurred' : '' %>">
-        <div class="ken-burns-img img-1 <%= hasError ? 'no-anim' : '' %>"></div>
-        <div class="ken-burns-img img-2 <%= hasError ? 'no-anim' : '' %>"></div>
-        <div class="ken-burns-img img-3 <%= hasError ? 'no-anim' : '' %>"></div>
+    <div id="ken-burns-bg" class="ken-burns-slideshow">
+        <div class="ken-burns-img img-1"></div>
+        <div class="ken-burns-img img-2"></div>
+        <div class="ken-burns-img img-3"></div>
     </div>
 
-    <% if (!hasError) { %>
     <!-- Immersive Welcome Text -->
     <div id="immersive-welcome" class="immersive-welcome-text">
         Wanderlust
     </div>
-    <% } %>
 
     <!-- Glassmorphism Auth Card (Popup) -->
-    <div id="glass-popup" class="glass-popup-form <%= hasError ? 'active' : '' %>">
+    <div id="glass-popup" class="glass-popup-form">
         <div class="text-center mb-4">
             <div class="auth-brand-logo mb-2">
                 <i class="fa-solid fa-plane-departure fs-1 text-white"></i>
@@ -97,21 +95,7 @@ nav.navbar, footer, .site-footer { display: none !important; }
     transform: scale(1.05);
 }
 
-/* Skip intro when error exists */
-.skip-intro .ken-burns-img.no-anim {
-    animation: none !important;
-    opacity: 1 !important;
-}
-.skip-intro .ken-burns-img.no-anim.img-1,
-.skip-intro .ken-burns-img.no-anim.img-2 {
-    opacity: 0 !important;
-}
-.skip-intro .ken-burns-img.no-anim.img-3 {
-    opacity: 1 !important;
-}
-.skip-intro .immersive-welcome-text {
-    display: none !important;
-}
+
 </style>
 
 <script>
@@ -119,14 +103,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const bg = document.getElementById('ken-burns-bg');
     const popup = document.getElementById('glass-popup');
     const welcomeText = document.getElementById('immersive-welcome');
-    
-    const hasError = popup.classList.contains('active') || document.querySelector('.alert-danger');
 
-    if (localStorage.getItem('introSeen') || hasError) {
+    if (sessionStorage.getItem('introSeen')) {
         // Skip intro
         if (welcomeText) welcomeText.style.setProperty('display', 'none', 'important');
         
-        bg.classList.add('blurred', 'no-anim');
+        bg.classList.add('blurred');
         bg.style.pointerEvents = 'none';
         
         popup.classList.add('active');
@@ -144,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (welcomeText) welcomeText.style.setProperty('display', 'none', 'important');
             }, 500); // Wait for transition to finish
             
-            localStorage.setItem('introSeen', 'true');
+            sessionStorage.setItem('introSeen', 'true');
         }, 3000);
     }
 });
