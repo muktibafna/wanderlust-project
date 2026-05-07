@@ -3,20 +3,40 @@ const { geocodeLocation } = require("../utils/geocoding");
 
 module.exports.index = async (req, res) => {
     let queryObj = {};
+    let searchActive = false;
+
     if (req.query.q) {
-        let regex = new RegExp(req.query.q, 'i');
-        queryObj = {
-            $or: [
-                { location: regex },
-                { title: regex },
-                { country: regex }
-            ]
-        };
+        searchActive = true;
     } else if (req.query.category) {
         queryObj.category = req.query.category;
     }
-    const allListings = await Listing.find(queryObj).populate("reviews");
-    res.render("listings/index", { allListings });
+
+    let allListings;
+    let matchCount = 0;
+    if (searchActive) {
+        // Fetch all listings but filter them to only include matches
+        const rawListings = await Listing.find({}).populate("reviews");
+        const regex = new RegExp(req.query.q, 'i');
+        
+        allListings = rawListings.filter(listing => {
+            const isMatch = (listing.title && regex.test(listing.title)) || 
+                           (listing.location && regex.test(listing.location)) || 
+                           (listing.country && regex.test(listing.country));
+            if (isMatch) {
+                listing.isMatch = true;
+                matchCount++;
+                return true;
+            }
+            return false;
+        });
+
+        // Optional: Sort matches if needed (e.g. by title)
+        allListings.sort((a, b) => a.title.localeCompare(b.title));
+    } else {
+        allListings = await Listing.find(queryObj).populate("reviews");
+    }
+    
+    res.render("listings/index", { allListings, searchQuery: req.query.q, matchCount });
 };
 
 module.exports.searchSuggestions = async (req, res) => {
